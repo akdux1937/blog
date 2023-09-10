@@ -1,1 +1,1 @@
-Sitemap: https://akdux1937.github.io/blog/sitemap.xml
+Sitemap: https://github.com/akdux1937/blog/sitemap.xml
