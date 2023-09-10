@@ -1,5 +1,5 @@
 ---
-title: "A Place For Thoughts"
+title: "A Place For Thoughts - just playing around"
 listing:
   contents: posts
   sort: "date desc"
