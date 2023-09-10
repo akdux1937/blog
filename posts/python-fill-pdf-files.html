@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Andrew Krcatovich">
+<meta name="dcterms.date" content="2023-09-06">
+
+<title>Andrew Krcatovich - Use Python to Fill PDF Files!</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Andrew Krcatovich</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html" rel="" target="">
+ <span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/" rel="" target=""><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com" rel="" target=""><i class="bi bi-twitter" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Use Python to Fill PDF Files!</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">python</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Andrew Krcatovich </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">September 6, 2023</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#use-python-to-fill-pdf-files" id="toc-use-python-to-fill-pdf-files" class="nav-link active" data-scroll-target="#use-python-to-fill-pdf-files">Use Python to Fill PDF Files!</a></li>
+  <li><a href="#pdf-setup" id="toc-pdf-setup" class="nav-link" data-scroll-target="#pdf-setup">PDF Setup</a></li>
+  <li><a href="#pdfrw-setup" id="toc-pdfrw-setup" class="nav-link" data-scroll-target="#pdfrw-setup">pdfrw Setup</a></li>
+  <li><a href="#accessing-our-pdf" id="toc-accessing-our-pdf" class="nav-link" data-scroll-target="#accessing-our-pdf">Accessing our PDF</a></li>
+  <li><a href="#filling-a-pdf" id="toc-filling-a-pdf" class="nav-link" data-scroll-target="#filling-a-pdf">Filling a PDF</a></li>
+  <li><a href="#bringing-it-all-together" id="toc-bringing-it-all-together" class="nav-link" data-scroll-target="#bringing-it-all-together">Bringing it all together</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+<section id="use-python-to-fill-pdf-files" class="level1">
+<h1>Use Python to Fill PDF Files!</h1>
+<p>PDFs are hard to work with. Over the years I’ve tried several approaches to filling them out in an automated way. It’s amazing my job has so many manual tasks that require filling out PDFs. It’s fairly routine for me to be manually filling out PDF files to process transactions. Needless to say I’ve either created or borrowed several solutions. First let me say I’m no VBA expert but I have experimented with solutions here as well.</p>
+<p>I’ve wrote a VBA script to fill out a PDF using “send keys”. Think “how could I do everything by use of just the keyboard shortcuts?” Once you know how to open a PDF with shortcuts, tab through the form fields and use shortcuts to save, you can automate this in VBA. The problem here is that it’s painstaking to set up. Plus if the form changes or you want to add a new form it’s basically like starting from scratch.</p>
+<p>Next I used VBA and the Acrobat reference to access and manipulate PDFs. This works much better because you can access the PDF form fields using VBA and Java Script. I would highly recommend this route if you’re going to use VBA. I still felt as if every PDF template had to be setup completely separate. Some of this is likely due to my experience level with VBA. Either way there was a lot of copying a pasting code.</p>
+<p>Then came my experience with Python, PyPDF2 and reportlab. I won’t go into too much detail about exactly how I did this. In short you create your PDF template, create blank PDF with just your data fields, and paste the new PDF as a watermark on top of your PDF template. Again, this is painstaking because you’re using grid coordinates to position where text should be placed on the page. This worked, it was fast, but it wasn’t great if the PDF template changed or if you wanted to manipulate the PDF file afterward.</p>
+<p>It was great when I found you could fill PDF form fields with python using PyPDF2 and pdfrw. Both of these libraries look to be able to do similar tasks but I chose pdfrw because it appears to be maintained better. PyPDF2 actually is no longer maintained. There is a PyPDF3 and PyPDF4; however, I already settled on pdfrw. The only issue I ran into is that you could fill in the fields but those values wouldn’t show until you refreshed the field in Acrobat. I found two ways around this; one was to click into every field and hit <code>Enter</code>. This option isn’t doable if you have several PDFs. The next was to open the PDFs in a web browser which causes a refresh of the fields.</p>
+<p>Because of these challenges I gave up for a while… However, while digging into Python and PDFs again I found the solution that refreshes the fields!</p>
+<p>So now I have a working solution I can pass around the office easily. A basic macro reference a Python exe file located on a shared network drive. Meaning there is no python install! And we can populate PDF forms with a simple excel macro while still getting all the flexibility and functionality of Python. The rest of this post will be going through an example of how to fill out a PDF using python.</p>
+</section>
+<section id="pdf-setup" class="level1">
+<h1>PDF Setup</h1>
+<p>I’m using Adobe Acrobat DC. I’m going to create a sample PDF file for this example. If you have an existing PDF you want to use just open, click on <code>Tools</code> &gt; <code>Prepare Form</code>. This action will create a fillable PDF form.</p>
+<p>Now let’s create a simple PDF for this example. We have the following fields.</p>
+<ul>
+<li>name</li>
+<li>phone</li>
+<li>date</li>
+<li>account_number</li>
+<li>cb_1 (check box “Yes”)</li>
+<li>cb_2 (check box “No”)</li>
+</ul>
+<p>Now that we have a sample PDF we will get started with a little Python.</p>
+<!-- ![]({{ site.baseurl }}/images/pdfrwtut/image003.png "template") -->
+<!-- ![Screen%20Shot%202020-10-20%20at%204.34.18%20PM.png](https://github.com/akdux1937/dux/blob/master/images/Screen%20Shot%202020-10-20%20at%204.34.18%20PM.png?raw=true) -->
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://github.com/akdux1937/dux/blob/master/images/pdfrwtut/image003.png?raw=true" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">image003.png</figcaption>
+</figure>
+</div>
+</section>
+<section id="pdfrw-setup" class="level1">
+<h1>pdfrw Setup</h1>
+<blockquote class="blockquote">
+<p>First thing to do is install pdfrw using <code>!pip install pdfrw</code></p>
+</blockquote>
+<div class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip3 install pdfrw</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pdfrw</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>pdfrw.__version__</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="2">
+<pre><code>'0.4'</code></pre>
+</div>
+</div>
+</section>
+<section id="accessing-our-pdf" class="level1">
+<h1>Accessing our PDF</h1>
+<div class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Let's first set some variable to reference our PDF template and output.pdf</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>pdf_template <span class="op">=</span> <span class="st">"template.pdf"</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>pdf_output <span class="op">=</span> <span class="st">"output.pdf"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>template_pdf <span class="op">=</span> pdfrw.PdfReader(pdf_template)  <span class="co"># create a pdfrw object from our template.pdf</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># template_pdf  # uncomment to see all the data captured from this PDF.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>You should print out <code>template_pdf</code> to see everything availabe in the PDF. There is a lot so for ease of reading I’ll comment out.</p>
+<p>For now let’s just try to get the form fields of the PDF we created. To do this we will set some of the variable we find important. I grabbed this code from a random snippet online but you can find several similar setups on stack overflow.</p>
+<div class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>ANNOT_KEY <span class="op">=</span> <span class="st">'/Annots'</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>ANNOT_FIELD_KEY <span class="op">=</span> <span class="st">'/T'</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>ANNOT_VAL_KEY <span class="op">=</span> <span class="st">'/V'</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>ANNOT_RECT_KEY <span class="op">=</span> <span class="st">'/Rect'</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>SUBTYPE_KEY <span class="op">=</span> <span class="st">'/Subtype'</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>WIDGET_SUBTYPE_KEY <span class="op">=</span> <span class="st">'/Widget'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Next, we can loop through the page(s). Here we only have one but you it’s a good idea to prepare for future functionality. We grab all the annotations to grab just the form field keys.</p>
+<div class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> page <span class="kw">in</span> template_pdf.pages:</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    annotations <span class="op">=</span> page[ANNOT_KEY]</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> annotation <span class="kw">in</span> annotations:</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> annotation[SUBTYPE_KEY] <span class="op">==</span> WIDGET_SUBTYPE_KEY:</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> annotation[ANNOT_FIELD_KEY]:</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>                key <span class="op">=</span> annotation[ANNOT_FIELD_KEY][<span class="dv">1</span>:<span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>                <span class="bu">print</span>(key)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>name
+phone
+date
+account_number
+cb_1
+cb_2</code></pre>
+</div>
+</div>
+<p>There you can see we were able to grab our form field names!</p>
+</section>
+<section id="filling-a-pdf" class="level1">
+<h1>Filling a PDF</h1>
+<p>To fill a PDF we can create a dictionary of what we want to populate the PDF. The dictionary <code>keys</code> will be the form field names and the <code>values</code> will be what we want to fill into the PDF.</p>
+<div class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> datetime <span class="im">import</span> date</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>data_dict <span class="op">=</span> {</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">'name'</span>: <span class="st">'Andrew Krcatovich'</span>,</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">'phone'</span>: <span class="st">'(123) 123-1234'</span>,</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">'date'</span>: date.today(),</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">'account_number'</span>: <span class="st">'123123123'</span>,</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">'cb_1'</span>: <span class="va">True</span>,</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">'cb_2'</span>: <span class="va">False</span>,</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Let’s setup a function to handle grabbing the keys, populating the values, and saving out the <code>output.pdf</code> file</p>
+<div class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fill_pdf(input_pdf_path, output_pdf_path, data_dict):</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    template_pdf <span class="op">=</span> pdfrw.PdfReader(input_pdf_path)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> page <span class="kw">in</span> template_pdf.pages:</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>        annotations <span class="op">=</span> page[ANNOT_KEY]</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> annotation <span class="kw">in</span> annotations:</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> annotation[SUBTYPE_KEY] <span class="op">==</span> WIDGET_SUBTYPE_KEY:</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>                <span class="cf">if</span> annotation[ANNOT_FIELD_KEY]:</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>                    key <span class="op">=</span> annotation[ANNOT_FIELD_KEY][<span class="dv">1</span>:<span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>                    <span class="cf">if</span> key <span class="kw">in</span> data_dict.keys():</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>                        <span class="cf">if</span> <span class="bu">type</span>(data_dict[key]) <span class="op">==</span> <span class="bu">bool</span>:</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>                            <span class="cf">if</span> data_dict[key] <span class="op">==</span> <span class="va">True</span>:</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>                                annotation.update(pdfrw.PdfDict(</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>                                    AS<span class="op">=</span>pdfrw.PdfName(<span class="st">'Yes'</span>)))</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>                        <span class="cf">else</span>:</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>                            annotation.update(</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>                                pdfrw.PdfDict(V<span class="op">=</span><span class="st">'</span><span class="sc">{}</span><span class="st">'</span>.<span class="bu">format</span>(data_dict[key]))</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>                            )</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>                            annotation.update(pdfrw.PdfDict(AP<span class="op">=</span><span class="st">''</span>))</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>    pdfrw.PdfWriter().write(output_pdf_path, template_pdf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>fill_pdf(pdf_template, pdf_output, data_dict)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Okay! That just filled out a PDF. Opening in preview on my Mac shows.</p>
+<!-- ![]({{ site.baseurl }}/images/pdfrwtut/image004.png "output") -->
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://github.com/akdux1937/dux/blob/master/images/pdfrwtut/image004.png?raw=true" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">image004.png</figcaption>
+</figure>
+</div>
+<p>However, opening the very same PDF in Acrobat doesn’t show the values of the form fields. If you click into the field you can see it did fill but for some reason the field isn’t refreshed to show the value. Printing the PDF here won’t help either as it will print blank. After a long while searching for an answer I found the following solution. Worked like a charm and the form fields are now showing in Acrobat as well.</p>
+<blockquote class="blockquote">
+<p>Tip: add Root.AcroForm.update(pdfrw.PdfDict(NeedAppearances=pdfrw.PdfObject(“true”)))</p>
+</blockquote>
+<p>Honestly, I don’t know why this isn’t the default setting. It seems like everyone online runs into the same issue and this solution seems hidden away to where there are several hard work-arounds that are being used. Either way just add the above reference line to the <code>fill_pdf</code> function like so.</p>
+<div class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fill_pdf(input_pdf_path, output_pdf_path, data_dict):</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    template_pdf <span class="op">=</span> pdfrw.PdfReader(input_pdf_path)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> page <span class="kw">in</span> template_pdf.pages:</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>        annotations <span class="op">=</span> page[ANNOT_KEY]</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> annotation <span class="kw">in</span> annotations:</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> annotation[SUBTYPE_KEY] <span class="op">==</span> WIDGET_SUBTYPE_KEY:</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>                <span class="cf">if</span> annotation[ANNOT_FIELD_KEY]:</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>                    key <span class="op">=</span> annotation[ANNOT_FIELD_KEY][<span class="dv">1</span>:<span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>                    <span class="cf">if</span> key <span class="kw">in</span> data_dict.keys():</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>                        <span class="cf">if</span> <span class="bu">type</span>(data_dict[key]) <span class="op">==</span> <span class="bu">bool</span>:</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>                            <span class="cf">if</span> data_dict[key] <span class="op">==</span> <span class="va">True</span>:</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>                                annotation.update(pdfrw.PdfDict(</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>                                    AS<span class="op">=</span>pdfrw.PdfName(<span class="st">'Yes'</span>)))</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>                        <span class="cf">else</span>:</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>                            annotation.update(</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>                                pdfrw.PdfDict(V<span class="op">=</span><span class="st">'</span><span class="sc">{}</span><span class="st">'</span>.<span class="bu">format</span>(data_dict[key]))</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>                            )</span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>                            annotation.update(pdfrw.PdfDict(AP<span class="op">=</span><span class="st">''</span>))</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>    template_pdf.Root.AcroForm.update(pdfrw.PdfDict(NeedAppearances<span class="op">=</span>pdfrw.PdfObject(<span class="st">'true'</span>)))  <span class="co"># NEW</span></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>    pdfrw.PdfWriter().write(output_pdf_path, template_pdf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>I added one additional function <code>fill_simple_pdf_file</code> as I found it very useful to manipulate a data dictionary, especially if it came from an excel file, first before populating the data. This way you can create many fillable forms from the same data source, do formating on the fields and set default values if nothing was supplied.</p>
+</section>
+<section id="bringing-it-all-together" class="level1">
+<h1>Bringing it all together</h1>
+<div class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pdfrw</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> datetime <span class="im">import</span> date</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>ANNOT_KEY <span class="op">=</span> <span class="st">'/Annots'</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>ANNOT_FIELD_KEY <span class="op">=</span> <span class="st">'/T'</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>ANNOT_VAL_KEY <span class="op">=</span> <span class="st">'/V'</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>ANNOT_RECT_KEY <span class="op">=</span> <span class="st">'/Rect'</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>SUBTYPE_KEY <span class="op">=</span> <span class="st">'/Subtype'</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>WIDGET_SUBTYPE_KEY <span class="op">=</span> <span class="st">'/Widget'</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fill_pdf(input_pdf_path, output_pdf_path, data_dict):</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>    template_pdf <span class="op">=</span> pdfrw.PdfReader(input_pdf_path)</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> page <span class="kw">in</span> template_pdf.pages:</span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>        annotations <span class="op">=</span> page[ANNOT_KEY]</span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> annotation <span class="kw">in</span> annotations:</span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> annotation[SUBTYPE_KEY] <span class="op">==</span> WIDGET_SUBTYPE_KEY:</span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>                <span class="cf">if</span> annotation[ANNOT_FIELD_KEY]:</span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>                    key <span class="op">=</span> annotation[ANNOT_FIELD_KEY][<span class="dv">1</span>:<span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>                    <span class="cf">if</span> key <span class="kw">in</span> data_dict.keys():</span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>                        <span class="cf">if</span> <span class="bu">type</span>(data_dict[key]) <span class="op">==</span> <span class="bu">bool</span>:</span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>                            <span class="cf">if</span> data_dict[key] <span class="op">==</span> <span class="va">True</span>:</span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a>                                annotation.update(pdfrw.PdfDict(</span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a>                                    AS<span class="op">=</span>pdfrw.PdfName(<span class="st">'Yes'</span>)))</span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a>                        <span class="cf">else</span>:</span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a>                            annotation.update(</span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a>                                pdfrw.PdfDict(V<span class="op">=</span><span class="st">'</span><span class="sc">{}</span><span class="st">'</span>.<span class="bu">format</span>(data_dict[key]))</span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a>                            )</span>
+<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a>                            annotation.update(pdfrw.PdfDict(AP<span class="op">=</span><span class="st">''</span>))</span>
+<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a>    template_pdf.Root.AcroForm.update(pdfrw.PdfDict(NeedAppearances<span class="op">=</span>pdfrw.PdfObject(<span class="st">'true'</span>)))</span>
+<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a>    pdfrw.PdfWriter().write(output_pdf_path, template_pdf)</span>
+<span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-35"><a href="#cb13-35" aria-hidden="true" tabindex="-1"></a><span class="co"># NEW</span></span>
+<span id="cb13-36"><a href="#cb13-36" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fill_simple_pdf_file(data, template_input, template_output):</span>
+<span id="cb13-37"><a href="#cb13-37" aria-hidden="true" tabindex="-1"></a>    some_date <span class="op">=</span> date.today()</span>
+<span id="cb13-38"><a href="#cb13-38" aria-hidden="true" tabindex="-1"></a>    data_dict <span class="op">=</span> {</span>
+<span id="cb13-39"><a href="#cb13-39" aria-hidden="true" tabindex="-1"></a>        <span class="st">'name'</span>: data.get(<span class="st">'name'</span>, <span class="st">''</span>),</span>
+<span id="cb13-40"><a href="#cb13-40" aria-hidden="true" tabindex="-1"></a>        <span class="st">'phone'</span>: data.get(<span class="st">'phone'</span>, <span class="st">''</span>),</span>
+<span id="cb13-41"><a href="#cb13-41" aria-hidden="true" tabindex="-1"></a>        <span class="st">'date'</span>: some_date,</span>
+<span id="cb13-42"><a href="#cb13-42" aria-hidden="true" tabindex="-1"></a>        <span class="st">'account_number'</span>: data.get(<span class="st">'account_number'</span>, <span class="st">''</span>),</span>
+<span id="cb13-43"><a href="#cb13-43" aria-hidden="true" tabindex="-1"></a>        <span class="st">'cb_1'</span>: data.get(<span class="st">'cb_1'</span>, <span class="va">False</span>),</span>
+<span id="cb13-44"><a href="#cb13-44" aria-hidden="true" tabindex="-1"></a>        <span class="st">'cb_2'</span>: data.get(<span class="st">'cb_2'</span>, <span class="va">False</span>),</span>
+<span id="cb13-45"><a href="#cb13-45" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb13-46"><a href="#cb13-46" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> fill_pdf(template_input, template_output, data_dict)</span>
+<span id="cb13-47"><a href="#cb13-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-48"><a href="#cb13-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-49"><a href="#cb13-49" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">'__main__'</span>:</span>
+<span id="cb13-50"><a href="#cb13-50" aria-hidden="true" tabindex="-1"></a>    pdf_template <span class="op">=</span> <span class="st">"template.pdf"</span></span>
+<span id="cb13-51"><a href="#cb13-51" aria-hidden="true" tabindex="-1"></a>    pdf_output <span class="op">=</span> <span class="st">"output.pdf"</span></span>
+<span id="cb13-52"><a href="#cb13-52" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb13-53"><a href="#cb13-53" aria-hidden="true" tabindex="-1"></a>    sample_data_dict <span class="op">=</span> {</span>
+<span id="cb13-54"><a href="#cb13-54" aria-hidden="true" tabindex="-1"></a>        <span class="st">'name'</span>: <span class="st">'Andrew Krcatovich'</span>,</span>
+<span id="cb13-55"><a href="#cb13-55" aria-hidden="true" tabindex="-1"></a>        <span class="st">'phone'</span>: <span class="st">'(123) 123-1234'</span>,</span>
+<span id="cb13-56"><a href="#cb13-56" aria-hidden="true" tabindex="-1"></a><span class="co">#         'date': date.today(),  # Removed date so we can dynamically set in python.</span></span>
+<span id="cb13-57"><a href="#cb13-57" aria-hidden="true" tabindex="-1"></a>        <span class="st">'account_number'</span>: <span class="st">'123123123'</span>,</span>
+<span id="cb13-58"><a href="#cb13-58" aria-hidden="true" tabindex="-1"></a>        <span class="st">'cb_1'</span>: <span class="va">True</span>,</span>
+<span id="cb13-59"><a href="#cb13-59" aria-hidden="true" tabindex="-1"></a>        <span class="st">'cb_2'</span>: <span class="va">False</span>,</span>
+<span id="cb13-60"><a href="#cb13-60" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb13-61"><a href="#cb13-61" aria-hidden="true" tabindex="-1"></a>    fill_simple_pdf_file(sample_data_dict, pdf_template, pdf_output)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Thanks for reading! Hope this can help someone else!</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<script src="https://utteranc.es/client.js" repo="akdux1937/blog" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

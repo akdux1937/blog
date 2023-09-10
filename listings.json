@@ -3,7 +3,8 @@
     "listing": "/index.html",
     "items": [
       "/posts/post-with-code/index.html",
-      "/posts/spider_fly.html",
+      "/posts/python-fill-pdf-files.html",
+      "/posts/fastai/spider_fly.html",
       "/posts/welcome/index.html"
     ]
   }
