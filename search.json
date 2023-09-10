@@ -1,0 +1,37 @@
+[
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "About this blog\nComming soon…"
+  },
+  {
+    "objectID": "posts/welcome/index.html",
+    "href": "posts/welcome/index.html",
+    "title": "Welcome To My Blog",
+    "section": "",
+    "text": "This is the first post in a Quarto blog. Welcome!\n\nSince this post doesn’t specify an explicit image, the first image in the post will be used in the listing page of posts."
+  },
+  {
+    "objectID": "posts/post-with-code/index.html",
+    "href": "posts/post-with-code/index.html",
+    "title": "Post With Code",
+    "section": "",
+    "text": "This is a post with executable code."
+  },
+  {
+    "objectID": "posts/spider_fly.html",
+    "href": "posts/spider_fly.html",
+    "title": "Spider vs House Fly Classifier",
+    "section": "",
+    "text": "from duckduckgo_search import ddg_images\nfrom fastcore.all import *\n\ndef search_images(term, max_images=200): return L(ddg_images(term, max_results=max_images)).itemgot('image')\n\n\nurls = search_images('spider', max_images=1)\nurls[0]\n\n/usr/local/lib/python3.9/dist-packages/duckduckgo_search/compat.py:60: UserWarning: ddg_images is deprecated. Use DDGS().images() generator\n  warnings.warn(\"ddg_images is deprecated. Use DDGS().images() generator\")\n/usr/local/lib/python3.9/dist-packages/duckduckgo_search/compat.py:64: UserWarning: parameter page is deprecated\n  warnings.warn(\"parameter page is deprecated\")\n/usr/local/lib/python3.9/dist-packages/duckduckgo_search/compat.py:66: UserWarning: parameter max_results is deprecated\n  warnings.warn(\"parameter max_results is deprecated\")\n\n\n'http://upload.wikimedia.org/wikipedia/commons/9/9b/Banana_Spider.jpg'\n\n\n\nfrom fastdownload import download_url\ndest = 'spider.jpg'\ndownload_url(urls[0], dest, show_progress=False)\n\nfrom fastai.vision.all import *\nim = Image.open(dest)\nim.to_thumb(256,256)\n\n\n\n\n\ndownload_url(search_images('house fly photos', max_images=1)[0], 'fly.jpg', show_progress=False)\nImage.open('fly.jpg').to_thumb(256,256)\n\n/usr/local/lib/python3.9/dist-packages/duckduckgo_search/compat.py:60: UserWarning: ddg_images is deprecated. Use DDGS().images() generator\n  warnings.warn(\"ddg_images is deprecated. Use DDGS().images() generator\")\n/usr/local/lib/python3.9/dist-packages/duckduckgo_search/compat.py:64: UserWarning: parameter page is deprecated\n  warnings.warn(\"parameter page is deprecated\")\n/usr/local/lib/python3.9/dist-packages/duckduckgo_search/compat.py:66: UserWarning: parameter max_results is deprecated\n  warnings.warn(\"parameter max_results is deprecated\")\n\n\n\n\n\n\nsearches = 'spider','house fly'\npath = Path('spider_or_fly')\nfrom time import sleep\n\n# for o in searches:\n#     dest = (path/o)\n#     dest.mkdir(exist_ok=True, parents=True)\n#     download_images(dest, urls=search_images(f'{o} photo'))\n#     sleep(10)\n#     resize_images(path/o, max_size=400, dest=path/o)\n\n\nfailed = verify_images(get_image_files(path))\nfailed.map(Path.unlink)\nlen(failed)\n\n0\n\n\n\ndls = DataBlock(\n    blocks=(ImageBlock, CategoryBlock),\n    get_items=get_image_files,\n    splitter=RandomSplitter(valid_pct=0.2, seed=42),\n    get_y=parent_label,\n    item_tfms=[Resize(192, method='squish')]\n).dataloaders(path)\n\ndls.show_batch(max_n=6)\n\n\n\n\n\nlearn = vision_learner(dls, resnet18, metrics=error_rate)\nlearn.fine_tune(6)\n\n/usr/local/lib/python3.9/dist-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.\n  warnings.warn(\n/usr/local/lib/python3.9/dist-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=ResNet18_Weights.IMAGENET1K_V1`. You can also use `weights=ResNet18_Weights.DEFAULT` to get the most up-to-date weights.\n  warnings.warn(msg)\n\n\n\n\n\n\n\n\n\nepoch\ntrain_loss\nvalid_loss\nerror_rate\ntime\n\n\n\n\n0\n1.012352\n0.210427\n0.125000\n00:03\n\n\n\n\n\n\n\n\n\n\n\n\nepoch\ntrain_loss\nvalid_loss\nerror_rate\ntime\n\n\n\n\n0\n0.439026\n0.211611\n0.156250\n00:01\n\n\n1\n0.283538\n0.130849\n0.031250\n00:01\n\n\n2\n0.210751\n0.062095\n0.031250\n00:01\n\n\n3\n0.156668\n0.024983\n0.000000\n00:01\n\n\n4\n0.122935\n0.011209\n0.000000\n00:01\n\n\n5\n0.100860\n0.008166\n0.000000\n00:01\n\n\n\n\n\n\nis_fly,_,probs = learn.predict(PILImage.create('spider.jpg'))\nprint(f\"This is a: {is_spider}.\")\nprint(f\"Probability it's a fly: {probs[0]:.4f}\")\n\n\n\n\n\n\n\n\nThis is a: spider.\nProbability it's a fly: 0.0011\n\n\n\nPILImage.create('fly.jpg').to_thumb(256,256)\n\n\n\n\n\nlearn.export()"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "A Place For Thoughts",
+    "section": "",
+    "text": "Post With Code\n\n\n\n\n\n\n\nnews\n\n\ncode\n\n\nanalysis\n\n\n\n\n\n\n\n\n\n\n\nSep 9, 2023\n\n\nHarlow Malloc\n\n\n\n\n\n\n  \n\n\n\n\nSpider vs House Fly Classifier\n\n\n\n\n\n\n\nfastai\n\n\n\n\n\n\n\n\n\n\n\nSep 6, 2023\n\n\nAndrew Krcatovich\n\n\n\n\n\n\n  \n\n\n\n\nWelcome To My Blog\n\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\n\n\nSep 6, 2023\n\n\nTristan O’Malley\n\n\n\n\n\n\nNo matching items"
+  }
+]
